@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart,signInSuccess,signInFailure } from '../redux/user/userSlice';
 
 function Signin() {
   const navigate = useNavigate();
+  const dispatch=useDispatch();
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+const{loading,error}=useSelector((state)=>state.user)
 
   const handleChange = (e) => {
     setFormData({
@@ -16,7 +18,7 @@ function Signin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading
+   dispatch(signInStart())
 
     try {
       const res = await fetch("http://localhost:5000/api/auth/signin", {
@@ -28,17 +30,20 @@ function Signin() {
       });
 
       const data = await res.json();
-      setLoading(false);
+      
 
       if ( data.email) {
-        setError(null); // Clear any previous errors
+       
+        dispatch(signInSuccess(data)) // Clear any previous errors
         navigate('/'); // Redirect to the sign-in page after success
       } else {
-        setError(data.message || "Signup failed. Please try again.");
+        dispatch(signInFailure(data.message || "Signup failed. Please try again."))
+        // setError(data.message || "Signup failed. Please try again.");
       }
     } catch (error) {
-      setLoading(false);
-      setError(error.message || "Something went wrong. Please try again.");
+     
+      dispatch(signInFailure(error.message || "Something went wrong. Please try again."))
+      // setError(error.message || "Something went wrong. Please try again.");
     }
   };
 
