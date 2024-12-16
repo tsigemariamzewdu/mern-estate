@@ -50,7 +50,7 @@ const{loading,error}=useSelector((state)=>state.user)
 
   return (
     <div className="p-3 max-w-lg mx-auto">
-      <h1 className='text-3xl text-center font-semibold my-7'>Sign Up</h1>
+      <h1 className='text-3xl text-center font-semibold my-7'>Sign In</h1>
       {error && <p className="text-red-500 text-center">{error}</p>} {/* Display errors */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         
@@ -74,7 +74,7 @@ const{loading,error}=useSelector((state)=>state.user)
           disabled={loading}
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95"
         >
-          {loading ? "Loading..." : "Sign Up"}
+          {loading ? "Loading..." : "Sign In"}
         </button>
         <OAuth/>
       </form>
