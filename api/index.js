@@ -1,44 +1,64 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import userRoute from "../api/routes/userRoute.js"
-import authRoute from "../api/routes/authRoute.js"
+import userRoute from "../api/routes/userRoute.js";
+import authRoute from "../api/routes/authRoute.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
-dotenv.config()
 
-mongoose.connect(process.env.MONGO).then(()=>{
-    console.log("connected to MonoDB")
-}).catch((error)=>{
-    console.log(error)
-})
+// Initialize dotenv
+dotenv.config();
 
 
 
-const app=express();
+// Mongoose connection
+mongoose
+  .connect(process.env.MONGO)
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
-app.use(express.json())
-app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your frontend origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+// Express app initialization
+const app = express();
+
+// CORS setup
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Replace with your frontend origin
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
     credentials: true, // Allow cookies or other credentials
+  })
+);
 
-}))
+// Body parser
+app.use(express.json());
 
-app.listen(5000,()=>{
-    console.log("server is listening on port 3000")
-})
+//using cookie parser
 
-app.use('/api/user',userRoute);
-app.use("/api/auth",authRoute);
+app.use(cookieParser())
 
-app.use((err,req,res,next)=>{
-    const statusCode=err.statusCode|| 500;
-    const message =err.message || "internal server error";
-    return res.status(statusCode).json({
-        success:false,
-        statusCode,
-        message
-    });
+
+
+// Routes
+app.use("/api/user", userRoute);
+app.use("/api/auth", authRoute);
+
+// Default error handler
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal server error";
+  return res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
 });
 
+// Start the server
+app.listen(5000, () => {
+  console.log("Server is listening on port 5000");
+});
