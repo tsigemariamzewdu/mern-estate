@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Cookies from 'js-cookie';
-import { updateUserStart, updateUserFailure, updateUserSuccess } from '../redux/user/userSlice';
+
+import { updateUserStart, updateUserFailure, updateUserSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess } from '../redux/user/userSlice';
 
 function Profile() {
   const { currentUser } = useSelector((state) => state.user);
@@ -27,7 +27,7 @@ function Profile() {
     try {
       dispatch(updateUserStart());
   
-      const token = Cookies.get('access_token');
+      const token = localStorage.getItem('access_token');
       if (!token) {
         throw new Error('No authentication token found. Please sign in again.');
       }
@@ -60,7 +60,36 @@ function Profile() {
       setError(error.message || 'An unexpected error occurred');
     }
   };
-  
+  const handleDeleteuser=async ()=>{
+    const token = localStorage.getItem('access_token');
+if (!token) {
+  throw new Error('No authentication token found. Please sign in again.');
+}
+
+    try {
+      dispatch(deleteUserStart());
+      const res=await fetch(`http://localhost:5000/api/user/delete/${currentUser._id}`,{
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+      
+      });
+      const data=await res.json()
+      console.log(data)
+      if(!data.msg){
+        console.log("you are the dumbest ...")
+        return 
+      }
+      localStorage.removeItem("token")
+      dispatch(deleteUserSuccess(data.msg))
+      
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message))
+    }
+  }
 
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -98,7 +127,7 @@ function Profile() {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
+        <span onClick={handleDeleteuser}className="text-red-700 cursor-pointer">Delete Account</span>
         <span className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
       {error && <p className="text-red-700 mt-5">{error}</p>}

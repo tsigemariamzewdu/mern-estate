@@ -50,7 +50,7 @@ export default function SignIn() {
       }
   
       // Store the token as a cookie
-      Cookies.set('access_token', data.token, {
+      localStorage.setItem('access_token', data.token, {
         secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
         sameSite: 'lax', // Protect against CSRF
         expires: 7, // Optional: Set expiration for the token cookie
