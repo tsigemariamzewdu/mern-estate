@@ -46,6 +46,18 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    signOutUserStart: (state) => {
+      state.loading = true;
+    },
+    signOutUserSuccess: (state) => { // Fixed typo here
+      state.currentUser = null;
+      state.loading = false;
+      state.error = null;
+    },
+    signOutUserFailure: (state, action) => { // Fixed typo here
+      state.error = action.payload;
+      state.loading = false;
+    },
   },
 });
 
@@ -58,7 +70,13 @@ export const {
   updateUserFailure,
   deleteUserFailure, // Fixed typo here
   deleteUserStart,
-  deleteUserSuccess, // Fixed typo here
+  deleteUserSuccess,
+  signOutUserStart,
+  signOutUserSuccess,
+  signOutUserFailure
+
+
+   // Fixed typo here
 } = userSlice.actions;
 
 export default userSlice.reducer;
