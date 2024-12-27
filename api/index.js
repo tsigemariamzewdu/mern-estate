@@ -5,6 +5,8 @@ import userRoute from "../api/routes/userRoute.js";
 import authRoute from "../api/routes/authRoute.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import listingRoute from "../api/routes/listingRoute.js"
+
 
 
 // Initialize dotenv
@@ -46,6 +48,7 @@ app.use(cookieParser())
 // Routes
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/listing",listingRoute);
 
 // Default error handler
 app.use((err, req, res, next) => {
