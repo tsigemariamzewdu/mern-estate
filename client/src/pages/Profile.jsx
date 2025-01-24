@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-
-import { updateUserStart, updateUserFailure, updateUserSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserStart, signOutUserFailure, signOutUserSuccess } from '../redux/user/userSlice';
+import {
+  updateUserStart,
+  updateUserFailure,
+  updateUserSuccess,
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  signOutUserStart,
+  signOutUserFailure,
+  signOutUserSuccess,
+} from '../redux/user/userSlice';
+import ImageUpload from '../components/ui/ImageUpload'; // Import your ImageUpload component
 
 function Profile() {
   const { currentUser } = useSelector((state) => state.user);
@@ -12,47 +22,58 @@ function Profile() {
     username: currentUser?.username || '',
     email: currentUser?.email || '',
     password: '',
+    avatar: currentUser?.avatar || '', // Avatar URL (Cloudinary image)
   });
 
   const [error, setError] = useState(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+  };
+
+  const handleImageUpload = (url) => {
+    setFormData({ ...formData, avatar: url }); // Update avatar URL in form data
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setUpdateSuccess(false);
+
     try {
       dispatch(updateUserStart());
-  
+
       const token = localStorage.getItem('access_token');
       if (!token) {
         throw new Error('No authentication token found. Please sign in again.');
       }
-  
-      const updatedData = { ...formData };
-      if (!formData.password) {
-        delete updatedData.password; // Remove password if it's not being updated
+
+      const payload = {
+        username: formData.username,
+        email: formData.email,
+        avatar: formData.avatar, // Include the image URL
+      };
+
+      if (formData.password) {
+        payload.password = formData.password;
       }
-  
+
       const res = await fetch(`http://localhost:5000/api/user/update/${currentUser._id}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        credentials: 'include',
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(payload),
       });
-  
+
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.message || 'Failed to update profile');
       }
-  
+
       const data = await res.json();
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
@@ -61,57 +82,19 @@ function Profile() {
       setError(error.message || 'An unexpected error occurred');
     }
   };
-  const handleDeleteuser=async ()=>{
-    const token = localStorage.getItem('access_token');
-if (!token) {
-  throw new Error('No authentication token found. Please sign in again.');
-}
-
-    try {
-      dispatch(deleteUserStart());
-      const res=await fetch(`http://localhost:5000/api/user/delete/${currentUser._id}`,{
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: 'include',
-      
-      });
-      const data=await res.json()
-      console.log(data)
-      if(!data.msg){
-        console.log("you are the dumbest ...")
-        return 
-      }
-      localStorage.removeItem("token")
-      dispatch(deleteUserSuccess(data.msg))
-      
-    } catch (error) {
-      dispatch(deleteUserFailure(error.message))
-    }
-  };
-  const handleSignOut= async()=>{
-    try {
-      dispatch(signOutUserStart())
-      const res= await fetch("http://localhost:5000/api/auth/signOut");
-      const data=await res.json()
-      if(data.success==false){
-        dispatch(signOutUserFailure(data.message))
-        return 
-      }
-      dispatch(signOutUserSuccess())
-    } catch (error) {
-      dispatch(signOutUserFailure(data.message))
-      
-    }
-
-  }
 
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* Image Upload Component */}
+        <div>
+          <label htmlFor="avatar" className="block font-medium mb-2">Profile Picture</label>
+          <ImageUpload onUpload={handleImageUpload} />
+          {formData.avatar && (
+            <p className="text-green-600 mt-2">Image uploaded successfully!</p>
+          )}
+        </div>
         <input
           type="text"
           placeholder="Username"
@@ -130,7 +113,7 @@ if (!token) {
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Password (leave blank to keep current)"
           id="password"
           value={formData.password}
           className="border p-3 rounded-lg"
@@ -142,11 +125,26 @@ if (!token) {
         >
           Update
         </button>
-        <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity:95' to={"/create-listing"}> Create Listing</Link>
+        <Link
+          className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"
+          to="/create-listing"
+        >
+          Create Listing
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
-        <span onClick={handleDeleteuser}className="text-red-700 cursor-pointer">Delete Account</span>
-        <span onClick={handleSignOut}className="text-red-700 cursor-pointer">Sign Out</span>
+        <span
+          onClick={() => console.log('Delete Account')}
+          className="text-red-700 cursor-pointer"
+        >
+          Delete Account
+        </span>
+        <span
+          onClick={() => console.log('Sign Out')}
+          className="text-red-700 cursor-pointer"
+        >
+          Sign Out
+        </span>
       </div>
       {error && <p className="text-red-700 mt-5">{error}</p>}
       {updateSuccess && <p className="text-green-700 mt-5">Profile updated successfully!</p>}
