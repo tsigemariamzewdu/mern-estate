@@ -36,8 +36,9 @@ export default function SignUp() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      console.log(data)
       
-      if (!data.username) {
+      if (!data.user) {
         setError(data.message || 'Signup failed. Please try again.');
         setLoading(false);
         return;
