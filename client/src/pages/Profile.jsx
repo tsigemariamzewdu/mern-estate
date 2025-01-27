@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   updateUserStart,
   updateUserFailure,
@@ -17,6 +18,7 @@ import ImageUpload from '../components/ui/ImageUpload'; // Import your ImageUplo
 function Profile() {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate=useNavigate()
 
   const [formData, setFormData] = useState({
     username: currentUser?.username || '',
@@ -82,6 +84,15 @@ function Profile() {
       setError(error.message || 'An unexpected error occurred');
     }
   };
+  async function  handleSignout() {
+    localStorage.clear()
+   
+    
+      navigate('/sign-in');
+    
+  };
+
+  
 
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -91,9 +102,7 @@ function Profile() {
         <div>
          
           <ImageUpload onUpload={handleImageUpload} />
-          {formData.avatar && (
-            <p className="text-green-600 mt-2">Image uploaded successfully!</p>
-          )}
+         
         </div>
         <input
           type="text"
@@ -140,7 +149,7 @@ function Profile() {
           Delete Account
         </span>
         <span
-          onClick={() => console.log('Sign Out')}
+          onClick={handleSignout}
           className="text-red-700 cursor-pointer"
         >
           Sign Out
