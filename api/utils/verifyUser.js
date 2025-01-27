@@ -11,10 +11,11 @@ export const verifyToken = (req, res, next) => {
     const token = authHeader.split(" ")[1];
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, "mysecret");
         req.user = decoded; // Populate req.user with decoded token data (e.g., id)
         next();
     } catch (error) {
+        console.log(error)
         next(errorHandler(403, "Invalid token"));
     }
 };

@@ -46,6 +46,7 @@ export const updateUser = async (req, res, next) => {
         res.status(200).json(rest);
     } catch (error) {
         // Pass the error to the error handler
+        console.log(error)
         next(error);
     }
 };

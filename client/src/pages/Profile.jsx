@@ -89,7 +89,7 @@ function Profile() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* Image Upload Component */}
         <div>
-          <label htmlFor="avatar" className="block font-medium mb-2">Profile Picture</label>
+         
           <ImageUpload onUpload={handleImageUpload} />
           {formData.avatar && (
             <p className="text-green-600 mt-2">Image uploaded successfully!</p>
