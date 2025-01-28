@@ -86,6 +86,7 @@ function Profile() {
   };
   async function  handleSignout() {
     localStorage.clear()
+    
    
     
       navigate('/sign-in');

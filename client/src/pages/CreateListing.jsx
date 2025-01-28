@@ -1,6 +1,11 @@
 import React from 'react';
+import ImageUpload from '../components/ui/anotherimageupload';
 
 function CreateListing() {
+  const handleImageUpload = (url) => {
+    console.log(url) // Update avatar URL in form data
+  };
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Create a Listing</h1>
@@ -103,10 +108,44 @@ function CreateListing() {
             <p className='font-semibold'>Images:
                 <span className='font-normal text-gray-600 ml-2'>The first image will be the cover (max 6)</span>
             </p>
-            <div className='flex gap-4'>
+            <div className="grid grid-cols-2 gap-4 p-4">
+                    <div>
+                
+                        <ImageUpload onUpload={handleImageUpload} />
+                
+                    </div> 
+                    <div>
+        
+         
+                        <ImageUpload onUpload={handleImageUpload} />
+        
+                    </div> 
+                    <div>
+         
+                        <ImageUpload onUpload={handleImageUpload} />
+        
+                    </div> 
+                    <div>
+         
+                        <ImageUpload onUpload={handleImageUpload} />
+        
+                    </div> 
+                    <div>
+         
+                        <ImageUpload onUpload={handleImageUpload} />
+        
+                    </div> 
+                    <div>
+         
+                        <ImageUpload onUpload={handleImageUpload} />
+        
+                    </div>
+                    
+       </div>
+            {/* <div className='flex gap-4'>
                 <input  className="p-3 border border-gray-300 rounded w-full"type="file"  id="images" accept='images/*' multiple/>
                 <button className='p-3 text-green-700 border border-green-700 rounded upppercase hover:shadow-lg disabled:opacity-80 '>Upload</button>
-            </div>
+            </div> */}
             <button className='p-3 bg-slate-700 text-white rounded-lg uppercase rounded hover:opacity-95 disabled:opacity-80'>Create Listing</button>
         </div>
        
