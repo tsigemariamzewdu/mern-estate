@@ -14,11 +14,13 @@ import {
   signOutUserSuccess,
 } from '../redux/user/userSlice';
 import ImageUpload from '../components/ui/ImageUpload'; // Import your ImageUpload component
+import { toast } from 'react-toastify';
 
 function Profile() {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const navigate=useNavigate()
+  const navigate=useNavigate();
+  const [isUpdating,setIsUpdating]=useState(false);
 
   const [formData, setFormData] = useState({
     username: currentUser?.username || '',
@@ -43,6 +45,7 @@ function Profile() {
     e.preventDefault();
     setError(null);
     setUpdateSuccess(false);
+    setIsUpdating(true);
 
     try {
       dispatch(updateUserStart());
@@ -74,24 +77,35 @@ function Profile() {
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.message || 'Failed to update profile');
+        
       }
 
       const data = await res.json();
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
+      toast.success("profile updated successfully!")
     } catch (error) {
       dispatch(updateUserFailure(error.message));
-      setError(error.message || 'An unexpected error occurred');
+     toast.error(error.message)
     }
-  };
-  async function  handleSignout() {
-    localStorage.clear()
-    
+    finally{
+      setIsUpdating(false)}
    
     
-      navigate('/sign-in');
-    
   };
+  function handleSignout(){
+    try {
+      dispatch(signOutUserStart());
+      localStorage.removeItem('access_token'); // Clear token from localStorage
+     
+      dispatch(signOutUserSuccess());
+      navigate('/sign-in'); // Redirect to sign-in page
+    } catch (error) {
+      console.log(error.message)
+      dispatch(signOutUserFailure(error.message));
+      setError('Failed to sign out. Please try again.');
+    }
+  }
 
   
 
@@ -133,7 +147,7 @@ function Profile() {
           type="submit"
           className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95"
         >
-          Update
+       {isUpdating ? "Updating..." : "Update"}
         </button>
         <Link
           className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"
@@ -156,8 +170,7 @@ function Profile() {
           Sign Out
         </span>
       </div>
-      {error && <p className="text-red-700 mt-5">{error}</p>}
-      {updateSuccess && <p className="text-green-700 mt-5">Profile updated successfully!</p>}
+      
     </div>
   );
 }

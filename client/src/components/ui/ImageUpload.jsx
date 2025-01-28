@@ -1,9 +1,13 @@
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
+import {toast, ToastContainer} from "react-toastify";
 
 const ImageUpload = ({ onUpload }) => {
   const [file, setFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUploaded, setIsUploaded] = useState(false);
+
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -17,6 +21,7 @@ const ImageUpload = ({ onUpload }) => {
 
   const handleUpload = async () => {
     if (!file) return;
+    setIsLoading(true);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -32,18 +37,30 @@ const ImageUpload = ({ onUpload }) => {
       );
       const result = await response.json();
       console.log("Uploaded Image URL:", result.secure_url);
-      onUpload(result.secure_url); // Pass the uploaded image URL to parent
+
+      onUpload(result.secure_url);
+      toast.success("image uploaded succesfully") ;
+      setIsUploaded(true)// Pass the uploaded image URL to parent
     } catch (error) {
       console.error("Error uploading image:", error);
+      toast.error("error uploading the image")
+    }
+    finally {
+      setIsLoading(false);
+      
     }
   };
 
   const handleRemoveImage = () => {
     setFile(null);
+    setIsUploaded(false);
+    toast.success("image deleted successfully!")
   };
 
   return (
+  
     <div className="flex flex-col items-center justify-center">
+       
       <div className="relative w-28 h-28 rounded-full flex items-center justify-center">
         {file ? (
           <>
@@ -86,12 +103,15 @@ const ImageUpload = ({ onUpload }) => {
         )}
       </div>
 
-      {file && (
+      {file && !isUploaded && (
         <button
           onClick={handleUpload}
-          className="mt-3 bg-blue-500 text-white px-4 py-2 rounded-md"
+          disabled={isLoading}
+          className={`mt-4 px-4 py-2 rounded-md text-white ${
+            isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500"
+          }`}
         >
-          Upload
+          {isLoading ? "Uploading..." : "Upload"}
         </button>
       )}
     </div>

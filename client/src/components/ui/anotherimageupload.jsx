@@ -1,16 +1,18 @@
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
-// import { toast, ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 
 const ImageUpload = ({ onUpload }) => {
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploaded, setIsUploaded] = useState(false); // Track if the image is uploaded
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
+      setIsUploaded(false); // Reset the upload status if a new file is selected
     }
   };
 
@@ -36,14 +38,14 @@ const ImageUpload = ({ onUpload }) => {
       if (response.ok) {
         console.log("Uploaded Image URL:", result.secure_url);
         onUpload(result.secure_url);
-        // toast.success("Image uploaded successfully!");
-        // Reset the file after successful upload
+        toast.success("Image uploaded successfully!");
+        setIsUploaded(true); // Mark upload as complete
       } else {
         throw new Error(result.error?.message || "Upload failed");
       }
     } catch (error) {
       console.error("Error uploading image:", error);
-    //   toast.error("Failed to upload image. Please try again.");
+      toast.error("Failed to upload image. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -51,6 +53,8 @@ const ImageUpload = ({ onUpload }) => {
 
   const handleRemoveImage = () => {
     setFile(null);
+    toast.success("image deleted successfully!")
+    setIsUploaded(false); // Reset upload status when removing the image
   };
 
   return (
@@ -72,33 +76,19 @@ const ImageUpload = ({ onUpload }) => {
             </button>
           </>
         ) : (
-          <label
-          className="flex flex-col items-center justify-center cursor-pointer w-28 h-28 bg-gray-100 "
-          style={{
-            backgroundImage: file
-              ? `url(${secure_url})`
-              : "none",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          {/* Show "+" icon and "Upload" text only if no avatar exists */}
-          {!file && (
-            <>
-              <span className="text-gray-400 text-xl">+</span>
-              <span className="text-gray-500 text-xs">Upload</span>
-            </>
-          )}
-          <input
-            type="file"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-        </label>
+          <label className="flex flex-col items-center justify-center cursor-pointer w-28 h-28 bg-gray-100">
+            <span className="text-gray-400 text-xl">+</span>
+            <span className="text-gray-500 text-xs">Upload</span>
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </label>
         )}
       </div>
 
-      {file && (
+      {file && !isUploaded && (
         <button
           onClick={handleUpload}
           disabled={isLoading}

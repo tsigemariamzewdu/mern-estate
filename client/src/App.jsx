@@ -7,11 +7,18 @@ import About from './pages/About';
 import Profile from './pages/Profile';
 import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
-import CreateListing from './pages/CreateListing';
+import CreateListing from './pages/createListing';
+
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+
+
 function App() {
   return (
    
       <BrowserRouter>
+      <ToastContainer position="bottom-left" autoClose={3000} theme="dark" />
+
       <Header/>
       <Routes>
         <Route path="/" element={<Home/>}/>
