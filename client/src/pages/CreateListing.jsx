@@ -2,9 +2,27 @@ import React from 'react';
 import ImageUpload from '../components/ui/anotherimageupload';
 
 function CreateListing() {
+  const [files,setFiles]=useState([])
+  const [formData,setFormData]=useState({
+    imageUrls:[],
+    name:"",
+    description:"",
+    address:"",
+    type:"rent",
+    bedrooms:1,
+    bathrooms:1,
+    regularPrice:0,
+    discountPrice:0,
+    offer:false,
+    parking:false,
+    furnished:false,
+  })
   const handleImageUpload = (url) => {
     console.log(url) // Update avatar URL in form data
   };
+  const handleChange=(e)=>({
+
+  })
 
   return (
     <main className="p-3 max-w-4xl mx-auto">
@@ -19,12 +37,16 @@ function CreateListing() {
             maxLength="62"
             minLength="10"
             required
+            onChange={handleChange}
+            value={formData.name}
           />
           <textarea
             placeholder="Description"
             className="border p-3 rounded-lg"
             id="description"
             required
+            onChange={handleChange}
+            value={formData.description}
           />
           <input
             type="text"
@@ -32,10 +54,14 @@ function CreateListing() {
             className="border p-3 rounded-lg"
             id="address"
             required
+            onChange={handleChange}
+            value={formData.address}
           />
           <div className="flex gap-6 flex-wrap">
             <div className="flex gap-2">
-              <input type="checkbox" id="sale" className="w-5" />
+              <input type="checkbox" id="sale" className="w-5" 
+              onChange={handleChange}
+              value={formData.n}/>
               <span>Sell</span>
             </div>
             <div className="flex gap-2">
