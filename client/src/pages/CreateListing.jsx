@@ -40,21 +40,28 @@ function CreateListing() {
       })
     }
   }
-  function handleSubmit(e){
+  async function handleSubmit(e){
     e.preventDefault()
     try{
       setLoading(true);
       setError(false);
-      // const res=await fetch("api/listing/create",{
-      //     method:"POST",
-      //     headers:{
-      //       "Content-Type":"application"
-      //     }
+      const res= await fetch("api/listing/create",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify(formData)
 
-      // })
+      })
+      const data=await res.json()
+      setLoading(false);
+      if(data.success===false){
+        setError(data.message)
+      }
 
     }catch(error){
       toast.error(error.message)
+      setLoading(false)
     }
 
   }
@@ -221,7 +228,8 @@ function CreateListing() {
                 <input  className="p-3 border border-gray-300 rounded w-full"type="file"  id="images" accept='images/*' multiple/>
                 <button className='p-3 text-green-700 border border-green-700 rounded upppercase hover:shadow-lg disabled:opacity-80 '>Upload</button>
             </div> */}
-            <button className='p-3 bg-slate-700 text-white rounded-lg uppercase  hover:opacity-95 disabled:opacity-80'>Create Listing</button>
+            <button className='p-3 bg-slate-700 text-white rounded-lg uppercase  hover:opacity-95 disabled:opacity-80'>
+            {loading ? "Creating..." : "Create Listing"}</button>
         </div>
        
       </form>
