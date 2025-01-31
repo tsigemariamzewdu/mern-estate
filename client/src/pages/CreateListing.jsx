@@ -2,8 +2,11 @@ import React from 'react';
 import ImageUpload from '../components/ui/anotherimageupload';
 import {useState} from "react";
 import { toast } from 'react-toastify';
+import { useRef } from 'react';
+import { useSelector } from 'react-redux';
 
 function CreateListing() {
+  const { currentUser } = useSelector((state) => state.user);
   const [files,setFiles]=useState([])
   const[error,setError]=useState(false);
   const[loading,setLoading]=useState(false)
@@ -43,16 +46,25 @@ function CreateListing() {
   async function handleSubmit(e){
     e.preventDefault()
     try{
+      const token = localStorage.getItem('access_token');
+     
+      if (!token) {
+        throw new Error('No authentication token found. Please sign in again.');
+      }
+
       setLoading(true);
       setError(false);
-      const res= await fetch("api/listing/create",{
+      const res= await fetch("http://localhost:5000/api/listing/create",{
           method:"POST",
-          headers:{
-            "Content-Type":"application/json"
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-          body:JSON.stringify(formData)
+          body:JSON.stringify({...formData,userRef:currentUser._id})
+        
 
       })
+      console.log(res)
       const data=await res.json()
       setLoading(false);
       if(data.success===false){
