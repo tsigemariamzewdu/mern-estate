@@ -16,7 +16,7 @@ dotenv.config();
 
 // Mongoose connection
 mongoose
-  .connect("mongodb://localhost:27017/mernestate"
+  .connect("mongodb+srv://tsigemariamzewdu20:%40Bbirhan2121@mern-estate.acqpd.mongodb.net/?retryWrites=true&w=majority&appName=mern-estate"
   )
   .then(() => {
     console.log("connected to MongoDB");

@@ -4,8 +4,10 @@ import {useState} from "react";
 import { toast } from 'react-toastify';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom"
 
 function CreateListing() {
+  const navigate=useNavigate()
   const { currentUser } = useSelector((state) => state.user);
   const [files,setFiles]=useState([])
   const[error,setError]=useState(false);
@@ -64,12 +66,13 @@ function CreateListing() {
         
 
       })
-      console.log(res)
+      
       const data=await res.json()
       setLoading(false);
       if(data.success===false){
         setError(data.message)
       }
+      navigate(`/listing/${data._id}`)
 
     }catch(error){
       toast.error(error.message)
