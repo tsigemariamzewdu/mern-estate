@@ -132,6 +132,29 @@ const handleShowListings=async ()=>{
     
   }
 }
+const handleListingDelete=async (listingId)=>{
+  try {
+    const res=await fetch(`http://localhost:5000/api/listing/delete/${listingId}`,
+     { method:"DELETE",
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+
+     }
+    )
+    const data=await res.json();
+    if(data.success===false){
+      console.log(data.message)
+      return
+    }
+
+    setUserListings((prev=>prev.filter((listing)=>listing._id!==listingId)))
+    
+  } catch (error) {
+    setError(error)
+  }
+}
   
 
   return (
