@@ -27,8 +27,13 @@ function CreateListing() {
     furnished:false,
   })
   const handleImageUpload = (url) => {
-    console.log(url) // Update avatar URL in form data
+    setFormData(prevState => ({
+      ...prevState,
+      imageUrls: [...prevState.imageUrls, url]  // Creating a new array with the new URL added
+    }));
+    console.log(url); 
   };
+  
   const handleChange=(e)=>{
     if(e.target.id==="sale"|| e.target.id==="rent"){
       setFormData({...formData,type:e.target.id})
