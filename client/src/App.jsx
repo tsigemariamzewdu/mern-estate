@@ -11,6 +11,7 @@ import CreateListing from './pages/createListing';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import UpdateListing from './pages/UpdateListing';
 
 
 function App() {
@@ -28,6 +29,8 @@ function App() {
         <Route element={<PrivateRoute/>}>
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/create-listing" element={<CreateListing />}/>
+        <Route path="/update-listing/:listingId" element={<UpdateListing />}/>
+
         </Route>
       
 
