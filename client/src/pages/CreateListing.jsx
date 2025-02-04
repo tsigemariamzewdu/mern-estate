@@ -27,12 +27,16 @@ function CreateListing() {
     furnished:false,
   })
   const handleImageUpload = (url) => {
-    setFormData(prevState => ({
-      ...prevState,
-      imageUrls: [...prevState.imageUrls, url]  // Creating a new array with the new URL added
-    }));
-    console.log(url); 
+    setFormData((prevState) => {
+      const updatedData = {
+        ...prevState,
+        imageUrls: [...prevState.imageUrls, url],
+      };
+      console.log("Updated Image URLs:", updatedData.imageUrls);
+      return updatedData;
+    });
   };
+  
   
   const handleChange=(e)=>{
     if(e.target.id==="sale"|| e.target.id==="rent"){
@@ -68,9 +72,11 @@ function CreateListing() {
             Authorization: `Bearer ${token}`,
           },
           body:JSON.stringify({...formData,userRef:currentUser._id})
+          
         
 
       })
+      console.log(formData)
       
       const data=await res.json()
       setLoading(false);

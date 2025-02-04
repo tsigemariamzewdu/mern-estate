@@ -8,6 +8,7 @@ import {
 import { app } from '../firebase';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import ImageUpload from '../components/ui/anotherimageupload';
 
 export default function UpdateListing() {
   const { currentUser } = useSelector((state) => state.user);
@@ -142,17 +143,22 @@ export default function UpdateListing() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        throw new Error('No authentication token found. Please sign in again.');
+      }
       if (formData.imageUrls.length < 1)
         return setError('You must upload at least one image');
       if (+formData.regularPrice < +formData.discountPrice)
         return setError('Discount price must be lower than regular price');
       setLoading(true);
       setError(false);
-      const res = await fetch(`/api/listing/update/${params.listingId}`, {
+      const res = await fetch(`http://localhost:5000/api/listing/update/${params.listingId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
         body: JSON.stringify({
           ...formData,
           userRef: currentUser._id,
@@ -163,11 +169,22 @@ export default function UpdateListing() {
       if (data.success === false) {
         setError(data.message);
       }
+      console.log(data)
       navigate(`/listing/${data._id}`);
     } catch (error) {
       setError(error.message);
       setLoading(false);
     }
+  };
+  const handleImageUpload = (url) => {
+    setFormData((prevState) => {
+      const updatedData = {
+        ...prevState,
+        imageUrls: [...prevState.imageUrls, url],
+      };
+      console.log("Updated Image URLs:", updatedData.imageUrls);
+      return updatedData;
+    });
   };
   return (
     <main className='p-3 max-w-4xl mx-auto'>
@@ -332,27 +349,11 @@ export default function UpdateListing() {
             </span>
           </p>
           <div className='flex gap-4'>
-            <input
-              onChange={(e) => setFiles(e.target.files)}
-              className='p-3 border border-gray-300 rounded w-full'
-              type='file'
-              id='images'
-              accept='image/*'
-              multiple
-            />
-            <button
-              type='button'
-              disabled={uploading}
-              onClick={handleImageSubmit}
-              className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'
-            >
-              {uploading ? 'Uploading...' : 'Upload'}
-            </button>
+           
+           
           </div>
-          <p className='text-red-700 text-sm'>
-            {imageUploadError && imageUploadError}
-          </p>
-          {/* {formData.imageUrls.length > 0 &&
+          
+          {formData.imageUrls.length > 0 &&
             formData.imageUrls.map((url, index) => (
               <div
                 key={url}
@@ -371,7 +372,32 @@ export default function UpdateListing() {
                   Delete
                 </button>
               </div>
-            ))} */}
+            ))}
+                <div className="grid grid-cols-2 gap-4 p-4">
+                    <div>
+                
+                        <ImageUpload onUpload={handleImageUpload} />
+                
+                    </div> 
+                    <div>
+        
+         
+                        <ImageUpload onUpload={handleImageUpload} />
+        
+                    </div> 
+                    <div>
+         
+                        <ImageUpload onUpload={handleImageUpload} />
+        
+                    </div> 
+                    <div>
+         
+                        <ImageUpload onUpload={handleImageUpload} />
+        
+                    </div> 
+                   
+                    
+       </div>
           <button
             disabled={loading || uploading}
             className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'

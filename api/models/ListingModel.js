@@ -60,10 +60,13 @@ const listingSchema=new mongoose.Schema(
 
 
         },
-        imagesUrls:{
-            type:Array,
-            required:true,
-        },
+        
+        imageUrls: {
+            type: [String],
+            required: true,
+            },
+              
+        
         userRef:{
             type:String,
             required:true,

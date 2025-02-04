@@ -126,6 +126,7 @@ const handleShowListings=async ()=>{
       setShowListingError(true)
       return
     }
+    console.log(data)
     setUserListings(data)
   } catch (error) {
     setShowListingError(true)
@@ -230,11 +231,14 @@ const handleListingDelete=async (listingId)=>{
               className='border rounded-lg p-3 flex justify-between items-center gap-4'
             >
               <Link to={`/listing/${listing._id}`}>
-                {/* <img
+            {listing.imageUrls?.length > 0 && listing.imageUrls[0] && (
+                <img
                   src={listing.imageUrls[0]}
-                  alt='listing cover'
-                  className='h-16 w-16 object-contain'
-                /> */}
+                  alt="listing cover"
+                  className="h-16 w-16 object-contain"
+                />
+              )}
+
               </Link>
               <Link
                 className='text-slate-700 font-semibold  hover:underline truncate flex-1'
