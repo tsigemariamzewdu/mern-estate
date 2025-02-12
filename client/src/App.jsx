@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import UpdateListing from './pages/UpdateListing';
 import Lisitng from './pages/Lisitng';
+import Search from './pages/search';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/sign-in" element={<Sigin/>}/>
         <Route path="/sign-up" element={<Signup/>}/>
         <Route path="/about" element={<About/>}/>
+        <Route path="/search" element={<Search/>}/>
         <Route path="/listing/:listingId" element={<Lisitng/>}/>
         <Route element={<PrivateRoute/>}>
         <Route path="/profile" element={<Profile/>}/>
