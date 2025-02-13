@@ -55,7 +55,7 @@ function Home() {
           <br />
           place with ease 
         </h1>
-        <div className='text-gray-400 text-xs sm:text-sm'> Youreal Estae is the best place to find your next perfect place to live.
+        <div className='text-gray-400 text-xs sm:text-sm'> YourReal Estae is the best place to find your next perfect place to live.
           <br />
           we have a wide range of properties for you to choose from.
         </div>
