@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 
 function Contact({listing}) {
-  const {landLord,setLandlord}=useState(null);
+  const [landLord,setLandlord]=useState(null);
+  const onChange = (e) => {
+    setMessage(e.target.value);
+  };
+
   useEffect(()=>{
     const fetchLandlord=async ()=>{
       try {
-        const res=await fetch(`http://localhost:5000/api/${listing.userRef}`)
+        const res=await fetch(`http://localhost:5000/api/user/${listing.userRef}`)
         const data=await res.json();
         setLandlord(data)
         
@@ -17,7 +21,7 @@ function Contact({listing}) {
     }
     fetchLandlord();
   },[listing.userRef])
-  const {message,setMessage}=useState()
+  const [message,setMessage]=useState()
   return (
   <>
   {landLord && (
