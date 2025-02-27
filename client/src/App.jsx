@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import UpdateListing from './pages/UpdateListing';
 import Lisitng from './pages/Lisitng';
-import Search from './pages/search';
+import Search from './pages/Search';
 
 
 function App() {
