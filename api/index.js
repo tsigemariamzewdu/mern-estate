@@ -5,7 +5,8 @@ import userRoute from "../api/routes/userRoute.js";
 import authRoute from "../api/routes/authRoute.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import listingRoute from "../api/routes/listingRoute.js"
+import listingRoute from "../api/routes/listingRoute.js";
+import path from "path";
 
 
 
@@ -24,7 +25,7 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
-
+  const __dirname = path.resolve();
 // Express app initialization
 const app = express();
 
@@ -50,6 +51,13 @@ app.use(cookieParser())
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/listing",listingRoute);
+
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+})
 
 // Default error handler
 app.use((err, req, res, next) => {

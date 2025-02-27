@@ -135,6 +135,10 @@ const handleShowListings=async ()=>{
 }
 const handleListingDelete=async (listingId)=>{
   try {
+    const token = localStorage.getItem('access_token');
+      if (!token) {
+        throw new Error('No authentication token found. Please sign in again.');
+      }
     const res=await fetch(`http://localhost:5000/api/listing/delete/${listingId}`,
      { method:"DELETE",
       headers: {
