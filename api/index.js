@@ -17,7 +17,7 @@ dotenv.config();
 
 // Mongoose connection
 mongoose
-  .connect("mongodb+srv://tsigemariamzewdu20:%40Bbirhan2121@mern-estate.acqpd.mongodb.net/?retryWrites=true&w=majority&appName=mern-estate"
+  .connect(process.env.MONGO
   )
   .then(() => {
     console.log("connected to MongoDB");
