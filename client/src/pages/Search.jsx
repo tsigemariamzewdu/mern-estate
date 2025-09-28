@@ -53,7 +53,7 @@ useEffect(() => {
       setLoading(true);
       setShowMore(false);
       const searchQuery = urlParams.toString();
-      const res = await fetch(`http://localhost:5000/api/listing/get?${searchQuery}`);
+      const res = await fetch(` https://mern-estate-xv51.onrender.com/api/listing/get?${searchQuery}`);
       const data = await res.json();
       console.log(data)
       if (data.length > 8) {
@@ -118,7 +118,7 @@ const handleSubmit=(e)=>{
     const startIndex=numberOfListings
     const urlParams=new URLSearchParams(location.search)
     const searchQuery=urlParams.toString();
-    const res = await fetch(`http://localhost:5000/api/listing/get?${searchQuery}`);
+    const res = await fetch(` https://mern-estate-xv51.onrender.com/api/listing/get?${searchQuery}`);
     const data = await res.json();
     if(data.length<9){
       setShowMore(false)

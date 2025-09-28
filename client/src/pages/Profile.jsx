@@ -67,7 +67,7 @@ function Profile() {
         payload.password = formData.password;
       }
 
-      const res = await fetch(`http://localhost:5000/api/user/update/${currentUser._id}`, {
+      const res = await fetch(` https://mern-estate-xv51.onrender.com/api/user/update/${currentUser._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ const handleShowListings=async ()=>{
         throw new Error('No authentication token found. Please sign in again.');
       }
     setShowListingError(false)
-    const res=await fetch(`http://localhost:5000/api/user/listing/${currentUser._id}`,{
+    const res=await fetch(` https://mern-estate-xv51.onrender.com/api/user/listing/${currentUser._id}`,{
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -139,7 +139,7 @@ const handleListingDelete=async (listingId)=>{
       if (!token) {
         throw new Error('No authentication token found. Please sign in again.');
       }
-    const res=await fetch(`http://localhost:5000/api/listing/delete/${listingId}`,
+    const res=await fetch(` https://mern-estate-xv51.onrender.com/api/listing/delete/${listingId}`,
      { method:"DELETE",
       headers: {
         'Content-Type': 'application/json',
